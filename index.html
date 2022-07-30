@@ -1,0 +1,15 @@
+<script src="./vue3.js"></script>
+
+<div id="app">
+  <div>test</div>
+</div>
+
+<script>
+  const { createApp, ref } = Vue
+  let app = Vue.createApp()
+  let state = Vue.reactive({
+    count: 0,
+  })
+  const count = Vue.ref(0)
+  app.mount('#app')
+</script>
