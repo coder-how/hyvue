@@ -1,15 +1,64 @@
 <script src="./vue3.js"></script>
 
-<div id="app">
-  <div>test</div>
-</div>
+<div id="app"></div>
 
 <script>
-  const { createApp, ref } = Vue
-  let app = Vue.createApp()
-  let state = Vue.reactive({
-    count: 0,
+  const { createApp, ref, reactive, computed, watch, watchEffect, onMounted, defineEmits } = Vue
+  let app = createApp({
+    setup() {
+      let count = ref(3)
+      let str = ref('ee')
+      function callback(val, xx) {
+        console.log(val, xx, '-------')
+      }
+      const val = computed({
+        get() {
+          console.log('666666')
+          return 'ee' + count.value
+        },
+      })
+      return {
+        val,
+        count,
+        callback,
+      }
+    },
+    template: `
+      <div >{{ count }}</div>
+      <MyButten v-model='count'></MyButten>
+    `,
   })
-  const count = Vue.ref(0)
+  app.component('MyButten', {
+    emits: {
+      'update:count': null,
+      test: val => {
+        console.log(val > 5)
+        return val > 5
+      },
+    },
+    props: ['count'],
+    setup(props, ctx) {
+      let index = 5
+      let com = computed({
+        get() {
+          return props.count
+        },
+        set(val) {
+          ctx.emit('update:count', val)
+        },
+      })
+      function click() {
+        console.log('click', ++index)
+        com.value = index
+        console.log(props)
+        // ctx.emit('update:count', index)
+      }
+      return {
+        com,
+        click,
+      }
+    },
+    template: `<button @click='click'>嘻嘻嘻 {{com}}</button>`,
+  })
   app.mount('#app')
 </script>
