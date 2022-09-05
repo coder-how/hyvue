@@ -1,8 +1,24 @@
 <script src="./vue3.js"></script>
 <script src="vuetest.js"></script>
 <!-- <script src="../../test2.js"></script> -->
-<div id="app">test</div>
+<div id="app">
+  <div>{{ count }}</div>
+  <button @click="increase">increase</button>
+</div>
 <script>
-  const {} = Vue
-  const { createApp } = hyVue
+  const { createApp, ref } = Vue
+  // const { createApp } = hyVue
+  const app = createApp({
+    setup() {
+      let count = ref(2)
+      function increase() {
+        count.value++
+      }
+      return {
+        count,
+        increase,
+      }
+    },
+  })
+  app.mount('#app')
 </script>

@@ -9160,6 +9160,7 @@ var Vue = (function (exports) {
       }
     }
     // encode the vnode type information into a bitmap
+    debugger
     const shapeFlag = isString(type)
       ? 1 /* ELEMENT */
       : isSuspense(type)
