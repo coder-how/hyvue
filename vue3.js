@@ -2480,11 +2480,13 @@ var Vue = (function (exports) {
     {
       accessedAttrs = false
     }
+    debugger
     try {
       if (vnode.shapeFlag & 4 /* STATEFUL_COMPONENT */) {
         // withProxy is a proxy with a different `has` trap only for
         // runtime-compiled render functions using `with` block.
         const proxyToUse = withProxy || proxy
+        debugger
         result = normalizeVNode(
           render.call(proxyToUse, proxyToUse, renderCache, props, setupState, data, ctx)
         )
@@ -17004,6 +17006,8 @@ var Vue = (function (exports) {
   exports.withMemo = withMemo
   exports.withModifiers = withModifiers
   exports.withScopeId = withScopeId
+  // 自己添加测试的
+  exports.rendererOptions = rendererOptions
 
   Object.defineProperty(exports, '__esModule', { value: true })
 

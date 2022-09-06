@@ -2,12 +2,14 @@
 <script src="vuetest.js"></script>
 <!-- <script src="../../test2.js"></script> -->
 <div id="app">
-  <div>{{ count }}</div>
-  <button @click="increase">increase</button>
+  <div>
+    <button>test</button>
+    <span>echo</span>
+  </div>
 </div>
 <script>
-  const { createApp, ref } = Vue
-  // const { createApp } = hyVue
+  const { ref } = Vue
+  const { createApp } = hyVue
   const app = createApp({
     setup() {
       let count = ref(2)
