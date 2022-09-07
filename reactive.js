@@ -1,5 +1,3 @@
-const { handleError } = require('./vue3')
-
 const objectToString = Object.prototype.toString
 const toTypeString = value => objectToString.call(value)
 
@@ -12,6 +10,9 @@ const EMPTY_OBJ = Object.freeze({})
 
 const isRef = val => !!(val?.['__v_isRef'] === true)
 
+function unref(value) {
+  return isRef(value) ? value.value : value
+}
 function isReactive(value) {
   return !!value?.['__v_isReactive']
 }
@@ -303,15 +304,39 @@ function doWatch(source, cb) {
   // }
 }
 
-let obj = reactive({
-  age: 18,
-})
+const shallowUnwrapHandlers = {
+  get: (target, key, receiver) => unref(Reflect.get(target, key, receiver)),
+  set: (target, key, value, receiver) => {
+    const oldValue = target[key]
+    if (isRef(oldValue) && !isRef(value)) {
+      oldValue.value = value
+      return true
+    } else {
+      return Reflect.set(target, key, value, receiver)
+    }
+  },
+}
+
+function proxyRefs(objectWithRefs) {
+  return isReactive(objectWithRefs)
+    ? objectWithRefs
+    : new Proxy(objectWithRefs, shallowUnwrapHandlers)
+}
+
+// let obj = reactive({
+//   age: 18,
+// })
 let count = ref(9)
 
-watch(
-  () => obj.age,
-  (newValue, oldValue) => {
-    console.log(`newValue:${newValue},oldValue:${oldValue}`)
-  }
-)
-obj.age = 19
+// watch(
+//   () => obj.age,
+//   (newValue, oldValue) => {
+//     console.log(`newValue:${newValue},oldValue:${oldValue}`)
+//   }
+// )
+// obj.age = 19
+let obj = {
+  count,
+}
+let testObj = proxyRefs(obj)
+console.log(testObj.count)

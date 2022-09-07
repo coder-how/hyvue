@@ -2490,6 +2490,7 @@ var Vue = (function (exports) {
         result = normalizeVNode(
           render.call(proxyToUse, proxyToUse, renderCache, props, setupState, data, ctx)
         )
+        console.log('generate vnode:', result)
         fallthroughAttrs = attrs
       } else {
         // functional
@@ -9162,7 +9163,6 @@ var Vue = (function (exports) {
       }
     }
     // encode the vnode type information into a bitmap
-    debugger
     const shapeFlag = isString(type)
       ? 1 /* ELEMENT */
       : isSuspense(type)
@@ -17007,9 +17007,10 @@ var Vue = (function (exports) {
   exports.withModifiers = withModifiers
   exports.withScopeId = withScopeId
   // 自己添加测试的
-  exports.rendererOptions = rendererOptions
+  exports.nodeOps = nodeOps
 
   Object.defineProperty(exports, '__esModule', { value: true })
+  Object.Text = Text
 
   return exports
 })({})
