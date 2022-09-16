@@ -317,6 +317,8 @@ const shallowUnwrapHandlers = {
   },
 }
 
+// 是响应式数据，则直接返回
+// 对象第一层数据，获取以及设置时进行ref转换
 function proxyRefs(objectWithRefs) {
   return isReactive(objectWithRefs)
     ? objectWithRefs

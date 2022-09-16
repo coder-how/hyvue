@@ -9,6 +9,7 @@
     </div>
     {{ count }}
     <button>test</button>
+    <!-- <span>{{ msg }}</span> -->
   </div>
 </div>
 <script>
@@ -19,6 +20,11 @@
       let count = ref(2)
       return {
         count,
+      }
+    },
+    data() {
+      return {
+        msg: 'echo',
       }
     },
   })

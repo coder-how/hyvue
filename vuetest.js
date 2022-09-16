@@ -1,4 +1,4 @@
-const { ReactiveEffect, compile, nodeOps, proxyRefs, Text } = Vue
+const { ReactiveEffect, compile, nodeOps, proxyRefs, Text, markRaw } = Vue
 
 var hyVue = (function (exports) {
   'use strict'
@@ -10,6 +10,12 @@ var hyVue = (function (exports) {
   const Fragment = Symbol('Fragment')
   const Comment = Symbol('Comment')
   const Static = Symbol('Static')
+  const hasOwnProperty = Object.prototype.hasOwnProperty
+  const hasOwn = (val, key) => {
+    console.log(val, key)
+    let flag = hasOwnProperty(val, key)
+    return flag
+  }
   const isFunction = val => typeof val === 'function'
   const isString = val => typeof val === 'string'
 
@@ -182,10 +188,11 @@ var hyVue = (function (exports) {
   }
 
   function renderComponentRoot(instance) {
-    const { type, vnode, render } = instance
+    const { type, vnode, render, proxy, withProxy } = instance
     let result
     if (vnode.shapeFlag & 4 /* STATEFUL_COMPONENT */) {
-      result = normalizeVNode(render.call({}, {}))
+      const proxyToUse = withProxy || proxy
+      result = normalizeVNode(render.call(proxyToUse, proxyToUse))
       console.log('render执行返回结果：', result)
     }
     return result
@@ -205,12 +212,28 @@ var hyVue = (function (exports) {
     return vnode
   }
 
+  function createDevRenderContext(instance) {
+    const target = {}
+    Object.defineProperty(target, '_', {
+      configurable: true,
+      enumerable: false,
+      get: () => instance,
+    })
+    return target
+  }
+  // tag:instance
   function createComponentInstance(vnode, parent, suspense) {
     const type = vnode.type
     const instance = {
       vnode,
       type,
+      proxy: null,
+      withProxy: null,
+      accessCache: null,
+      setupState: EMPTY_OBJ,
+      ctx: EMPTY_OBJ,
     }
+    instance.ctx = createDevRenderContext(instance)
     instance.root = parent ? parent.root : instance
     // instance.emit = emit$1.bind(null, instance)
     return instance
@@ -228,6 +251,10 @@ var hyVue = (function (exports) {
 
   function setupStatefulComponent(instance) {
     const Component = instance.type
+
+    instance.accessCache = Object.create(null)
+    instance.proxy = markRaw(new Proxy(instance.ctx, PublicInstanceProxyHandlers))
+
     const { setup } = Component
     if (setup) {
       const setupContext = (instance.setupContext =
@@ -248,6 +275,48 @@ var hyVue = (function (exports) {
     })
   }
 
+  const PublicInstanceProxyHandlers = {
+    get({ _: instance }, key) {
+      const { setupState, accessCache } = instance
+      if (key === '__isVue') {
+        return true
+      }
+      console.log('------key:', key)
+      console.log('------setupState:', setupState)
+      console.log('------accessCache:', accessCache)
+      console.log(hasOwn(setupState, key))
+
+      // script setup
+      if (setupState !== EMPTY_OBJ && setupState.__isScriptSetup && hasOwn(setupState, key)) {
+        return setupState[key]
+      }
+      {
+        const n = accessCache[key]
+        if (n !== undefined) {
+          console.log('999999')
+          switch (n) {
+            case 1:
+              return setupState[key]
+          }
+        } else if (setupState !== EMPTY_OBJ && hasOwn(setupState, key)) {
+          console.log('22222222')
+          accessCache[key] = 1 /* SETUP */
+          return setupState[key]
+        }
+      }
+    },
+  }
+
+  const RuntimeCompiledPublicInstanceProxyHandlers = Object.assign(
+    {},
+    PublicInstanceProxyHandlers,
+    {
+      get(target, key) {
+        return PublicInstanceProxyHandlers.get(target, key, target)
+      },
+    }
+  )
+
   let installWithProxy = i => {
     if (i.render._rc) {
       i.withProxy = new Proxy(i.ctx, RuntimeCompiledPublicInstanceProxyHandlers)
@@ -262,7 +331,7 @@ var hyVue = (function (exports) {
       finishComponentSetup(instance)
     }
   }
-
+  // 根据template生成render
   function finishComponentSetup(instance) {
     const Component = instance.type
     if (!instance.render) {

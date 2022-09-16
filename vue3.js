@@ -7760,6 +7760,7 @@ var Vue = (function (exports) {
               startMeasure(instance, `render`)
             }
             const subTree = (instance.subTree = renderComponentRoot(instance))
+            console.log('----> instance.subTree', instance.subTree)
             {
               endMeasure(instance, `render`)
             }
