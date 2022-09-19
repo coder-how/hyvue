@@ -12,8 +12,10 @@ var hyVue = (function (exports) {
   const Static = Symbol('Static')
   const hasOwnProperty = Object.prototype.hasOwnProperty
   const hasOwn = (val, key) => {
-    console.log(val, key)
-    let flag = hasOwnProperty(val, key)
+    console.log('val:', val)
+    console.log('key:', key)
+    let flag = hasOwnProperty.call(val, key)
+    console.log('-----')
     return flag
   }
   const isFunction = val => typeof val === 'function'
@@ -154,6 +156,7 @@ var hyVue = (function (exports) {
 
     const setupRenderEffect = (instance, initialVNode, container) => {
       const componentUpdateFn = () => {
+        console.log('------------> track')
         if (!instance.isMounted) {
           const subTree = (instance.subTree = renderComponentRoot(instance))
           patch(null, subTree, container)
@@ -230,6 +233,7 @@ var hyVue = (function (exports) {
       proxy: null,
       withProxy: null,
       accessCache: null,
+      data: EMPTY_OBJ,
       setupState: EMPTY_OBJ,
       ctx: EMPTY_OBJ,
     }
@@ -277,7 +281,7 @@ var hyVue = (function (exports) {
 
   const PublicInstanceProxyHandlers = {
     get({ _: instance }, key) {
-      const { setupState, accessCache } = instance
+      const { setupState, accessCache, data } = instance
       if (key === '__isVue') {
         return true
       }
@@ -302,6 +306,9 @@ var hyVue = (function (exports) {
           console.log('22222222')
           accessCache[key] = 1 /* SETUP */
           return setupState[key]
+        } else if (data !== EMPTY_OBJ && hasOwn(data, key)) {
+          accessCache[key] = 2 /* DATA */
+          return data[key]
         }
       }
     },
@@ -328,9 +335,52 @@ var hyVue = (function (exports) {
       instance.render = setupResult
     } else if (isObject(setupResult)) {
       instance.setupState = proxyRefs(setupResult)
+      // 确保with取到值
+      exposeSetupStateOnRenderContext(instance)
       finishComponentSetup(instance)
     }
   }
+
+  function exposeSetupStateOnRenderContext(instance) {
+    const { ctx, setupState } = instance
+    Object.keys(setupState).forEach(key => {
+      Object.defineProperty(ctx, key, {
+        enumerable: true,
+        configurable: true,
+        get: () => setupState[key],
+        set: NOOP,
+      })
+    })
+  }
+
+  function applyOptions(instance) {
+    let options = instance.type
+    debugger
+    const ctx = instance.ctx
+    let { data: dataOptions } = options
+    if (isFunction(dataOptions)) {
+      let data = dataOptions.call()
+      instance.data = data
+      if (!isObject(data)) {
+        console.error('data must return object')
+      } else {
+        for (const key in data) {
+          Object.defineProperty(ctx, key, {
+            configurable: true,
+            enumerable: true,
+            get: () => {
+              console.log('data---> :', data)
+              return data[key]
+            },
+            set: NOOP,
+          })
+        }
+      }
+    } else {
+      console.error('data is not function')
+    }
+  }
+
   // 根据template生成render
   function finishComponentSetup(instance) {
     const Component = instance.type
@@ -342,6 +392,10 @@ var hyVue = (function (exports) {
       }
       instance.render = Component.render || NOOP
       installWithProxy(instance)
+    }
+    // support 2.x
+    {
+      applyOptions(instance)
     }
   }
 

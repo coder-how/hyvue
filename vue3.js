@@ -273,6 +273,8 @@ var Vue = (function (exports) {
    * @private
    */
   const toDisplayString = val => {
+    debugger
+    console.log('todisplaystring:', val)
     return isString(val)
       ? val
       : val == null
