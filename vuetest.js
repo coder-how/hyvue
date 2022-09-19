@@ -1,4 +1,4 @@
-const { ReactiveEffect, compile, rendererOptions } = Vue
+const { ReactiveEffect, compile, nodeOps, proxyRefs, Text, markRaw } = Vue
 
 var hyVue = (function (exports) {
   'use strict'
@@ -8,9 +8,16 @@ var hyVue = (function (exports) {
   const NOOP = () => {}
 
   const Fragment = Symbol('Fragment')
-  const Text = Symbol('Text')
   const Comment = Symbol('Comment')
   const Static = Symbol('Static')
+  const hasOwnProperty = Object.prototype.hasOwnProperty
+  const hasOwn = (val, key) => {
+    console.log('val:', val)
+    console.log('key:', key)
+    let flag = hasOwnProperty.call(val, key)
+    console.log('-----')
+    return flag
+  }
   const isFunction = val => typeof val === 'function'
   const isString = val => typeof val === 'string'
 
@@ -18,6 +25,20 @@ var hyVue = (function (exports) {
   const isTeleport = type => type.__isTeleport
   const isObject = val => val !== null && typeof val === 'object'
   const extend = Object.assign
+
+  function patchClass(el, value) {
+    if (value == null) {
+      el.removeAttribute('calss')
+    } else {
+      el.className = value
+    }
+  }
+  const patchProp = (el, key, prevValue, nextValue) => {
+    if (key === 'class') {
+      patchClass(el, nextValue)
+    }
+  }
+  const rendererOptions = extend({ patchProp }, nodeOps)
   function isVNode(value) {
     return value ? value.__v_isVNode === true : false
   }
@@ -59,12 +80,26 @@ var hyVue = (function (exports) {
       }
       const { type, ref, shapeFlag } = n2
       switch (type) {
+        case Text:
+          processText(n1, n2, container)
+          break
         default:
           if (shapeFlag & 1 /* ELEMENT */) {
             processElement(n1, n2, container)
           } else if (shapeFlag & 6 /* COMPONENT */) {
             processComponent(n1, n2, container)
           }
+      }
+    }
+
+    const processText = (n1, n2, container) => {
+      if (n1 == null) {
+        hostInsert((n2.el = hostCreateText(n2.children)), container)
+      } else {
+        const el = (n2.el = n1.el)
+        if (n2.children !== n1.children) {
+          hostSetText(el, n2, children)
+        }
       }
     }
 
@@ -79,11 +114,18 @@ var hyVue = (function (exports) {
     const mountElement = (vnode, container) => {
       let el = (vnode.el = hostCreateElement(vnode.type, false, false))
       console.log('create tag:', vnode.type)
-      let { shapeFlag } = vnode
+      let { shapeFlag, props } = vnode
       if (shapeFlag & 8 /* TEXT_CHILDREN */) {
         hostSetElementText(el, vnode.children)
       } else if (shapeFlag & 16 /* ARRAY_CHILDREN */) {
         mountChildren(vnode.children, el)
+      }
+      // props
+      // 处理class，sytle，click等
+      if (props) {
+        for (const key in props) {
+          hostPatchProp(el, key, null, props[key])
+        }
       }
       hostInsert(el, container)
       console.log('mount tag:', vnode.type)
@@ -114,6 +156,7 @@ var hyVue = (function (exports) {
 
     const setupRenderEffect = (instance, initialVNode, container) => {
       const componentUpdateFn = () => {
+        console.log('------------> track')
         if (!instance.isMounted) {
           const subTree = (instance.subTree = renderComponentRoot(instance))
           patch(null, subTree, container)
@@ -148,10 +191,12 @@ var hyVue = (function (exports) {
   }
 
   function renderComponentRoot(instance) {
-    const { type, vnode, render } = instance
+    const { type, vnode, render, proxy, withProxy } = instance
     let result
     if (vnode.shapeFlag & 4 /* STATEFUL_COMPONENT */) {
-      result = normalizeVNode(render.call({}, {}))
+      const proxyToUse = withProxy || proxy
+      result = normalizeVNode(render.call(proxyToUse, proxyToUse))
+      console.log('render执行返回结果：', result)
     }
     return result
   }
@@ -170,12 +215,29 @@ var hyVue = (function (exports) {
     return vnode
   }
 
+  function createDevRenderContext(instance) {
+    const target = {}
+    Object.defineProperty(target, '_', {
+      configurable: true,
+      enumerable: false,
+      get: () => instance,
+    })
+    return target
+  }
+  // tag:instance
   function createComponentInstance(vnode, parent, suspense) {
     const type = vnode.type
     const instance = {
       vnode,
       type,
+      proxy: null,
+      withProxy: null,
+      accessCache: null,
+      data: EMPTY_OBJ,
+      setupState: EMPTY_OBJ,
+      ctx: EMPTY_OBJ,
     }
+    instance.ctx = createDevRenderContext(instance)
     instance.root = parent ? parent.root : instance
     // instance.emit = emit$1.bind(null, instance)
     return instance
@@ -193,6 +255,10 @@ var hyVue = (function (exports) {
 
   function setupStatefulComponent(instance) {
     const Component = instance.type
+
+    instance.accessCache = Object.create(null)
+    instance.proxy = markRaw(new Proxy(instance.ctx, PublicInstanceProxyHandlers))
+
     const { setup } = Component
     if (setup) {
       const setupContext = (instance.setupContext =
@@ -213,23 +279,123 @@ var hyVue = (function (exports) {
     })
   }
 
+  const PublicInstanceProxyHandlers = {
+    get({ _: instance }, key) {
+      const { setupState, accessCache, data } = instance
+      if (key === '__isVue') {
+        return true
+      }
+      console.log('------key:', key)
+      console.log('------setupState:', setupState)
+      console.log('------accessCache:', accessCache)
+      console.log(hasOwn(setupState, key))
+
+      // script setup
+      if (setupState !== EMPTY_OBJ && setupState.__isScriptSetup && hasOwn(setupState, key)) {
+        return setupState[key]
+      }
+      {
+        const n = accessCache[key]
+        if (n !== undefined) {
+          console.log('999999')
+          switch (n) {
+            case 1:
+              return setupState[key]
+          }
+        } else if (setupState !== EMPTY_OBJ && hasOwn(setupState, key)) {
+          console.log('22222222')
+          accessCache[key] = 1 /* SETUP */
+          return setupState[key]
+        } else if (data !== EMPTY_OBJ && hasOwn(data, key)) {
+          accessCache[key] = 2 /* DATA */
+          return data[key]
+        }
+      }
+    },
+  }
+
+  const RuntimeCompiledPublicInstanceProxyHandlers = Object.assign(
+    {},
+    PublicInstanceProxyHandlers,
+    {
+      get(target, key) {
+        return PublicInstanceProxyHandlers.get(target, key, target)
+      },
+    }
+  )
+
+  let installWithProxy = i => {
+    if (i.render._rc) {
+      i.withProxy = new Proxy(i.ctx, RuntimeCompiledPublicInstanceProxyHandlers)
+    }
+  }
+
   function handleSetupResult(instance, setupResult) {
     if (isFunction(setupResult)) {
       instance.render = setupResult
     } else if (isObject(setupResult)) {
-      // instance.setupState = proxyRefs(setupResult)
+      instance.setupState = proxyRefs(setupResult)
+      // 确保with取到值
+      exposeSetupStateOnRenderContext(instance)
       finishComponentSetup(instance)
     }
   }
 
+  function exposeSetupStateOnRenderContext(instance) {
+    const { ctx, setupState } = instance
+    Object.keys(setupState).forEach(key => {
+      Object.defineProperty(ctx, key, {
+        enumerable: true,
+        configurable: true,
+        get: () => setupState[key],
+        set: NOOP,
+      })
+    })
+  }
+
+  function applyOptions(instance) {
+    let options = instance.type
+    debugger
+    const ctx = instance.ctx
+    let { data: dataOptions } = options
+    if (isFunction(dataOptions)) {
+      let data = dataOptions.call()
+      instance.data = data
+      if (!isObject(data)) {
+        console.error('data must return object')
+      } else {
+        for (const key in data) {
+          Object.defineProperty(ctx, key, {
+            configurable: true,
+            enumerable: true,
+            get: () => {
+              console.log('data---> :', data)
+              return data[key]
+            },
+            set: NOOP,
+          })
+        }
+      }
+    } else {
+      console.error('data is not function')
+    }
+  }
+
+  // 根据template生成render
   function finishComponentSetup(instance) {
     const Component = instance.type
     if (!instance.render) {
       const template = Component.template
       if (template) {
         Component.render = compile(template, {})
+        console.log('render fn', Component.render._rc)
       }
       instance.render = Component.render || NOOP
+      installWithProxy(instance)
+    }
+    // support 2.x
+    {
+      applyOptions(instance)
     }
   }
 

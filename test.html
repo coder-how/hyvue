@@ -3,8 +3,13 @@
 <!-- <script src="../../test2.js"></script> -->
 <div id="app">
   <div>
+    <div class="test">
+      aaaaaa
+      <span>cccc</span>
+    </div>
+    {{ count }}
     <button>test</button>
-    <span>echo</span>
+    <span>{{ msg }}</span>
   </div>
 </div>
 <script>
@@ -13,14 +18,21 @@
   const app = createApp({
     setup() {
       let count = ref(2)
-      function increase() {
-        count.value++
-      }
       return {
         count,
-        increase,
+      }
+    },
+    data() {
+      return {
+        msg: 'echo',
       }
     },
   })
   app.mount('#app')
 </script>
+
+<style>
+  .test {
+    background-color: pink;
+  }
+</style>
