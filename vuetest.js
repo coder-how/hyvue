@@ -156,7 +156,7 @@ var hyVue = (function (exports) {
 
     const setupRenderEffect = (instance, initialVNode, container) => {
       const componentUpdateFn = () => {
-        console.log('------------> track')
+        console.log('---------------------------------------------------> track')
         if (!instance.isMounted) {
           const subTree = (instance.subTree = renderComponentRoot(instance))
           patch(null, subTree, container)

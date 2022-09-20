@@ -18,6 +18,9 @@
   const app = createApp({
     setup() {
       let count = ref(2)
+      setTimeout(() => {
+        count.value = 5
+      }, 5000)
       return {
         count,
       }
