@@ -395,6 +395,7 @@ var hyVue = (function (exports) {
     }
     // support 2.x
     {
+      // 支持vue2options选项
       applyOptions(instance)
     }
   }
