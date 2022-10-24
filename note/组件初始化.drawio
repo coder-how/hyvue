@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="KCn8TVaaCC5OZlEmRXF9" name="Page-1">
-        <mxGraphModel dx="966" dy="654" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
+        <mxGraphModel dx="1117" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -8,120 +8,143 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="2" value="patch:确定节点类型，放进对应处理函数中" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="20" y="180" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="40" y="590" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="9" value="" style="edgeStyle=none;html=1;" parent="1" source="3" target="8" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="3" value="processComponent&lt;br&gt;判断是挂载还是更新" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="221" y="180" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="241" y="590" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="5" value="节点为组件" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="140" y="190" width="80" height="20" as="geometry"/>
+                    <mxGeometry x="160" y="600" width="80" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="18" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=none;" edge="1" parent="1" source="8" target="17">
+                <mxCell id="18" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=none;" parent="1" source="8" target="17" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="540" y="70"/>
+                            <mxPoint x="560" y="480"/>
+                            <mxPoint x="560" y="280"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="20" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#F0F0F0;" edge="1" parent="1" source="8" target="19">
+                <mxCell id="20" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#F0F0F0;" parent="1" source="8" target="19" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="22" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#F0F0F0;" edge="1" parent="1" source="8" target="21">
+                <mxCell id="22" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#F0F0F0;" parent="1" source="8" target="21" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="540" y="360"/>
-                            <mxPoint x="540" y="650"/>
+                            <mxPoint x="560" y="770"/>
+                            <mxPoint x="560" y="1060"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="8" value="mountComponent:" style="whiteSpace=wrap;html=1;rounded=1;fontFamily=Helvetica;" parent="1" vertex="1">
-                    <mxGeometry x="480" y="180" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="500" y="590" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="10" value="我们只看初始化，及挂载" style="text;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;labelBackgroundColor=none;labelBorderColor=none;html=1;horizontal=1;" parent="1" vertex="1">
-                    <mxGeometry x="339" y="190" width="150" height="20" as="geometry"/>
+                    <mxGeometry x="359" y="600" width="150" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="17" value="createComponentInstance&lt;br&gt;创建组件实例" style="whiteSpace=wrap;html=1;rounded=1;gradientColor=none;fillColor=default;" vertex="1" parent="1">
-                    <mxGeometry x="680" y="40" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="24" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#F0F0F0;" edge="1" parent="1" source="19" target="23">
+                <mxCell id="100" value="" style="edgeStyle=none;html=1;" parent="1" source="17" target="99" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="19" value="setupComponent" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="680" y="180" width="120" height="60" as="geometry"/>
+                <mxCell id="17" value="createComponentInstance&lt;br&gt;创建组件实例" style="whiteSpace=wrap;html=1;rounded=1;gradientColor=none;fillColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="699" y="250" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="21" value="setupRenderEffect&lt;br&gt;&lt;ul&gt;&lt;li&gt;此处是执行渲染函数的地方&lt;/li&gt;&lt;li&gt;也是响应式的地方，收集依赖，依赖变化时，重新执行update函数&lt;/li&gt;&lt;/ul&gt;" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="679" y="600" width="231" height="100" as="geometry"/>
-                </mxCell>
-                <mxCell id="82" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" edge="1" parent="1" source="23" target="81">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="940" y="70"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="84" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" edge="1" parent="1" source="23" target="83">
+                <mxCell id="24" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#F0F0F0;" parent="1" source="19" target="23" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="86" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" edge="1" parent="1" source="23" target="85">
+                <mxCell id="102" value="" style="edgeStyle=none;html=1;" parent="1" source="19" target="101" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="940" y="350"/>
+                            <mxPoint x="760" y="360"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="91" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#FFFFFF;" edge="1" parent="1" source="23" target="89">
+                <mxCell id="19" value="setupComponent" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="590" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="setupRenderEffect&lt;br&gt;&lt;ul&gt;&lt;li&gt;此处是执行渲染函数的地方&lt;/li&gt;&lt;li&gt;也是响应式的地方，收集依赖，依赖变化时，重新执行update函数&lt;/li&gt;&lt;/ul&gt;" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="699" y="1010" width="231" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" parent="1" source="23" target="81" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="940" y="490"/>
+                            <mxPoint x="960" y="480"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="23" value="&lt;font color=&quot;#ffffff&quot;&gt;setupStatefulComponent&lt;br&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="880" y="180" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="81" value="exposePropOnRenderContext&lt;br&gt;将prop属性绑定到intance.ctxs上" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="1080" y="40" width="180" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="83" value="执行setup" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="1080" y="180" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="88" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" edge="1" parent="1" source="85" target="87">
+                <mxCell id="84" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" parent="1" source="23" target="83" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="90" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" edge="1" parent="1" source="85" target="89">
+                <mxCell id="86" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" parent="1" source="23" target="85" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="1140" y="490"/>
+                            <mxPoint x="960" y="760"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="85" value="handleSetupResult" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="1080" y="320" width="120" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="87" value="exposeStateOnRenderContext&lt;br&gt;将setup返回的对象绑定到instance.ctx上" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="1280" y="320" width="170" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="93" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" edge="1" parent="1" source="89" target="92">
+                <mxCell id="91" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontColor=#FFFFFF;" parent="1" source="23" target="89" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="1340" y="410"/>
+                            <mxPoint x="960" y="900"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="98" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" edge="1" parent="1" source="89" target="97">
+                <mxCell id="23" value="&lt;font color=&quot;#ffffff&quot;&gt;setupStatefulComponent&lt;br&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="590" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="exposePropOnRenderContext&lt;br&gt;将prop属性绑定到intance.ctxs上" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1100" y="450" width="180" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="执行setup" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1100" y="590" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" parent="1" source="85" target="87" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="89" value="finishComponentSetup" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="1280" y="460" width="120" height="60" as="geometry"/>
+                <mxCell id="90" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" parent="1" source="85" target="89" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1160" y="900"/>
+                        </Array>
+                    </mxGeometry>
                 </mxCell>
-                <mxCell id="92" value="没有runder函数，根据组件的templaate，由compile函数生成render函数" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="1480" y="380" width="120" height="60" as="geometry"/>
+                <mxCell id="85" value="handleSetupResult" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1100" y="730" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="97" value="applyOptions" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
-                    <mxGeometry x="1480" y="460" width="120" height="60" as="geometry"/>
+                <mxCell id="87" value="exposeStateOnRenderContext&lt;br&gt;将setup返回的对象绑定到instance.ctx上" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="730" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" parent="1" source="89" target="92" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1360" y="820"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="98" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;fontColor=#FFFFFF;" parent="1" source="89" target="97" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" value="finishComponentSetup" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="870" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="没有runder函数，根据组件的templaate，由compile函数生成render函数" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1500" y="790" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="applyOptions" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1500" y="870" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" value="normalizePropsOptions&lt;br&gt;根据传入的props初始化，但是并没有赋值" style="whiteSpace=wrap;html=1;rounded=1;gradientColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="899" y="250" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="101" target="103">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="initProps" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="setFullProps&lt;br&gt;将instance的props（即组件的props属性）与template解析的props合并" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1100" y="330" width="190" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

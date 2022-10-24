@@ -1,36 +1,51 @@
 <script src="./vue3.js"></script>
-<script src="vuetest.js"></script>
+<!-- <script src="vuetest.js"></script> -->
 <!-- <script src="../../test2.js"></script> -->
 <div id="app">
   <div>
-    <div class="test">
-      aaaaaa
-      <span>cccc</span>
-    </div>
-    {{ count }}
-    <button>test</button>
-    <span>{{ msg }}</span>
+    <msg :c-msg="fMsg"></msg>
+    <button @click="changeMsg">change msg</button>
   </div>
 </div>
 <script>
-  const { ref } = Vue
-  const { createApp } = hyVue
-  const app = createApp({
-    setup() {
-      let count = ref(2)
-      setTimeout(() => {
-        count.value = 5
-      }, 5000)
-      return {
-        count,
-      }
+  const { ref, createApp, h, computed, watch } = Vue
+
+  let app = createApp({
+    name: 'app',
+    components: {
+      msg: {
+        name: 'app',
+        template: `<div class="msg">{{msg}}</div>`,
+        props: ['cMsg'],
+        setup(props, { emit }) {
+          console.log('------------------> props', props)
+          let msg = ref(props.cMsg)
+          watch(
+            () => props.cMsg,
+            () => {
+              msg.value = props.cMsg
+            }
+          )
+          return {
+            msg,
+          }
+        },
+      },
     },
-    data() {
+
+    setup() {
+      let fMsg = ref('echo')
+      function changeMsg() {
+        fMsg.value += 's'
+        console.log('-------------> fMsg.value', fMsg.value)
+      }
       return {
-        msg: 'echo',
+        fMsg,
+        changeMsg,
       }
     },
   })
+
   app.mount('#app')
 </script>
 

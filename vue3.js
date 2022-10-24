@@ -5551,6 +5551,8 @@ var Vue = (function (exports) {
     return merged
   }
 
+  // 1. 组件自己的props与template解析的props合并
+  // 2. 对合并后的props添加响应式
   function initProps(
     instance,
     rawProps,
@@ -5700,6 +5702,7 @@ var Vue = (function (exports) {
       validateProps(rawProps || {}, props, instance)
     }
   }
+  // 将instance的props（即组件的props属性）与template解析的props合并
   function setFullProps(instance, rawProps, props, attrs) {
     const [options, needCastKeys] = instance.propsOptions
     let hasAttrsChanged = false
@@ -5707,6 +5710,7 @@ var Vue = (function (exports) {
     if (rawProps) {
       for (let key in rawProps) {
         // key, ref are reserved and never passed down
+        // props保留字段
         if (isReservedProp(key)) {
           continue
         }
@@ -5776,6 +5780,16 @@ var Vue = (function (exports) {
     }
     return value
   }
+  // comp:
+  /**
+   * 1. 有缓存取缓存
+   * 2. 根据组件是否存在mixin，extend来做额外的操作
+   * 3.
+   * @param {传入的组件选项：就是自己写的组件options} comp
+   * @param {*} appContext
+   * @param {*} asMixin
+   * @returns
+   */
   function normalizePropsOptions(comp, appContext, asMixin = false) {
     const cache = appContext.propsCache
     const cached = cache.get(comp)
@@ -5841,6 +5855,7 @@ var Vue = (function (exports) {
         }
       }
     }
+    debugger
     const res = [normalized, needCastKeys]
     cache.set(comp, res)
     return res
@@ -9519,6 +9534,7 @@ var Vue = (function (exports) {
 
   function setupComponent(instance, isSSR = false) {
     isInSSRComponentSetup = isSSR
+    debugger
     const { props, children } = instance.vnode
     const isStateful = isStatefulComponent(instance)
     initProps(instance, props, isStateful, isSSR)
