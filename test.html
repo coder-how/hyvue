@@ -2,21 +2,29 @@
 <!-- <script src="vuetest.js"></script> -->
 <!-- <script src="../../test2.js"></script> -->
 <div id="app">
-  <div>
-    <msg :c-msg="fMsg"></msg>
-    <button @click="changeMsg">change msg</button>
-  </div>
+  <div></div>
 </div>
 <script>
   const { ref, createApp, h, computed, watch } = Vue
 
   let app = createApp({
     name: 'app',
-    components: {
-      msg: {
-        name: 'app',
+    components: {},
+    setup() {
+      const fMsg = ref('echo')
+      const refObj = ref({
+        p: 'pp',
+        flag: true,
+        state:
+      })
+      function changeMsg() {
+        fMsg.value += 's'
+        console.log('-------------> fMsg.value', fMsg.value)
+      }
+      const msgComponent = {
+        name: 'msg',
         template: `<div class="msg">{{msg}}</div>`,
-        props: ['cMsg'],
+        props: ['cMsg', 'refO'],
         setup(props, { emit }) {
           console.log('------------------> props', props)
           let msg = ref(props.cMsg)
@@ -30,19 +38,34 @@
             msg,
           }
         },
-      },
-    },
-
-    setup() {
-      let fMsg = ref('echo')
-      function changeMsg() {
-        fMsg.value += 's'
-        console.log('-------------> fMsg.value', fMsg.value)
       }
-      return {
-        fMsg,
-        changeMsg,
+      const BtnComponent = {
+        props: ['data'],
+        setup(props, { emit }) {
+          console.log('-----------> props', props)
+          let { data } = props
+          console.log('---------------> data', data)
+          let flag = computed({
+            get() {
+              console.log('-------> get')
+              return data.flag
+            },
+            set(val) {
+              data.flag = val
+            },
+          })
+          function clickbutton() {
+            console.log('----------> clickbutton')
+            flag.value = !data.flag
+          }
+          return () => h('button', { onClick: clickbutton }, [flag.value + ''])
+        },
       }
+      return () =>
+        h('div', {}, [
+          h(msgComponent, { data: refObj.value }),
+          h(BtnComponent, { data: refObj.value }),
+        ])
     },
   })
 

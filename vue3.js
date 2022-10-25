@@ -2489,6 +2489,7 @@ var Vue = (function (exports) {
         // runtime-compiled render functions using `with` block.
         const proxyToUse = withProxy || proxy
         debugger
+        // tag:render
         result = normalizeVNode(
           render.call(proxyToUse, proxyToUse, renderCache, props, setupState, data, ctx)
         )
@@ -4639,6 +4640,7 @@ var Vue = (function (exports) {
     const instance = currentRenderingInstance || currentInstance
     if (instance) {
       const Component = instance.type
+      // 显式自身名称具有最高优先级
       // explicit self name has highest priority
       if (type === COMPONENTS) {
         const selfName = getComponentName(Component)
@@ -9166,6 +9168,10 @@ var Vue = (function (exports) {
     // class & style normalization.
     if (props) {
       // for reactive or proxy objects, we need to clone it to enable mutation.
+      // 对于反应对象或代理对象，我们需要克隆它以启用变异。
+      if (type.name === 'msg') {
+        debugger
+      }
       props = guardReactiveProps(props)
       let { class: klass, style } = props
       if (klass && !isString(klass)) {
@@ -9694,6 +9700,7 @@ var Vue = (function (exports) {
             ),
             componentCompilerOptions
           )
+          // tag:compile
           Component.render = compile(template, finalCompilerOptions)
           {
             endMeasure(instance, `compile`)
