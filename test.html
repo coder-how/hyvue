@@ -2,74 +2,81 @@
 <!-- <script src="vuetest.js"></script> -->
 <!-- <script src="../../test2.js"></script> -->
 <div id="app">
-  <div></div>
+  <div>ddddddd</div>
 </div>
 <script>
-  const { ref, createApp, h, computed, watch } = Vue
+  // const { ref, createApp, h, computed, watch } = Vue
+  // createApp({
+  //   name: 'app',
+  //   components: {},
+  //   setup() {
+  //     const fMsg = ref('echo')
+  //     const refObj = ref({
+  //       p: 'pp',
+  //       flag: true,
+  //       state: 'x',
+  //     })
+  //     function changeMsg() {
+  //       fMsg.value += 's'
+  //       console.log('-------------> fMsg.value', fMsg.value)
+  //     }
+  //     const msgComponent = {
+  //       name: 'msg',
+  //       template: `<div class="msg">{{msg}}</div>`,
+  //       props: ['cMsg', 'refO'],
+  //       setup(props, { emit }) {
+  //         console.log('------------------> props', props)
+  //         let msg = ref(props.cMsg)
+  //         watch(
+  //           () => props.cMsg,
+  //           () => {
+  //             msg.value = props.cMsg
+  //           }
+  //         )
+  //         return {
+  //           msg,
+  //         }
+  //       },
+  //     }
+  //     const BtnComponent = {
+  //       props: ['data'],
+  //       setup(props, { emit }) {
+  //         console.log('-----------> props', props)
+  //         let { data } = props
+  //         console.log('---------------> data', data)
+  //         let flag = computed({
+  //           get() {
+  //             console.log('-------> get')
+  //             return data.flag
+  //           },
+  //           set(val) {
+  //             data.flag = val
+  //           },
+  //         })
+  //         function clickbutton() {
+  //           console.log('----------> clickbutton')
+  //           flag.value = !data.flag
+  //         }
+  //         return () => h('button', { onClick: clickbutton }, [flag.value + ''])
+  //       },
+  //     }
+  //     return () =>
+  //       h('div', {}, [
+  //         h(msgComponent, { data: refObj.value }),
+  //         h(BtnComponent, { data: refObj.value }),
+  //       ])
+  //   },
+  // }).mount('#app')
 
-  let app = createApp({
-    name: 'app',
-    components: {},
+  const { ref, createApp, h, computed, watch, onMounted } = Vue
+  createApp({
     setup() {
-      const fMsg = ref('echo')
-      const refObj = ref({
-        p: 'pp',
-        flag: true,
-        state:
+      onMounted(() => {
+        console.log('----------> test', document.getElementById('test'))
       })
-      function changeMsg() {
-        fMsg.value += 's'
-        console.log('-------------> fMsg.value', fMsg.value)
-      }
-      const msgComponent = {
-        name: 'msg',
-        template: `<div class="msg">{{msg}}</div>`,
-        props: ['cMsg', 'refO'],
-        setup(props, { emit }) {
-          console.log('------------------> props', props)
-          let msg = ref(props.cMsg)
-          watch(
-            () => props.cMsg,
-            () => {
-              msg.value = props.cMsg
-            }
-          )
-          return {
-            msg,
-          }
-        },
-      }
-      const BtnComponent = {
-        props: ['data'],
-        setup(props, { emit }) {
-          console.log('-----------> props', props)
-          let { data } = props
-          console.log('---------------> data', data)
-          let flag = computed({
-            get() {
-              console.log('-------> get')
-              return data.flag
-            },
-            set(val) {
-              data.flag = val
-            },
-          })
-          function clickbutton() {
-            console.log('----------> clickbutton')
-            flag.value = !data.flag
-          }
-          return () => h('button', { onClick: clickbutton }, [flag.value + ''])
-        },
-      }
-      return () =>
-        h('div', {}, [
-          h(msgComponent, { data: refObj.value }),
-          h(BtnComponent, { data: refObj.value }),
-        ])
+      return () => h('div', { id: 'test' }, [h('div', {}, 'aaa'), h('div', {}, 'eee')])
     },
-  })
-
-  app.mount('#app')
+  }).mount('#app')
 </script>
 
 <style>

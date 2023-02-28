@@ -6268,6 +6268,8 @@ var Vue = (function (exports) {
             } else {
               render(vnode, rootContainer, isSVG)
             }
+            debugger
+
             isMounted = true
             app._container = rootContainer
             rootContainer.__vue_app__ = app
@@ -6927,6 +6929,7 @@ var Vue = (function (exports) {
   function baseCreateRenderer(options, createHydrationFns) {
     const target = getGlobalThis()
     target.__VUE__ = true
+    debugger
     {
       setDevtoolsHook(target.__VUE_DEVTOOLS_GLOBAL_HOOK__, target)
     }
@@ -6972,6 +6975,7 @@ var Vue = (function (exports) {
         optimized = false
         n2.dynamicChildren = null
       }
+      console.log('-------------> patch')
       const { type, ref, shapeFlag } = n2
       switch (type) {
         case Text:
@@ -7790,6 +7794,7 @@ var Vue = (function (exports) {
             {
               endMeasure(instance, `patch`)
             }
+            console.log('------------> initialVNode', initialVNode)
             initialVNode.el = subTree.el
           }
           // mounted hook
@@ -11754,6 +11759,7 @@ var Vue = (function (exports) {
       injectNativeTagCheck(app)
       injectCompilerOptionsCheck(app)
     }
+    debugger
     const { mount } = app
     app.mount = containerOrSelector => {
       const container = normalizeContainer(containerOrSelector)
